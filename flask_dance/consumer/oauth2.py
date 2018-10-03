@@ -40,6 +40,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             token_url_params=None,
             redirect_url=None,
             redirect_to=None,
+            callback_uri_scheme='http',
             session_class=None,
             backend=None,
 
@@ -93,6 +94,8 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 :func:`~flask.url_for` with this argument. If you do not specify
                 either ``redirect_url`` or ``redirect_to``, the user will be
                 redirected to the root path (``/``).
+            callback_uri_scheme: URI Scheme to apply to :func:`~flask.url_for`
+                when generating the callback uri.
             session_class: The class to use for creating a Requests session
                 between the consumer (your website) and the provider (e.g.
                 Twitter). Defaults to
@@ -133,6 +136,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.token_url_params = token_url_params or {}
         self.redirect_url = redirect_url
         self.redirect_to = redirect_to
+        self.callback_uri_scheme = callback_uri_scheme
 
         self.teardown_app_request(self.teardown_session)
 
@@ -180,6 +184,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         log.debug("client_id = %s", self.client_id)
         self.session.redirect_uri = url_for(
             ".authorized", next=request.args.get('next'), _external=True,
+            _scheme=self.callback_uri_scheme,
         )
         url, state = self.session.authorization_url(
             self.authorization_url, state=self.state,

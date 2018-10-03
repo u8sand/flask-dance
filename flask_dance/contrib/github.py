@@ -14,7 +14,7 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 def make_github_blueprint(
         client_id=None, client_secret=None, scope=None, redirect_url=None,
-        redirect_to=None, login_url=None, authorized_url=None,
+        redirect_to=None, login_url=None, authorized_url=None, callback_uri_scheme='http',
         session_class=None, backend=None):
     """
     Make a blueprint for authenticating with GitHub using OAuth 2. This requires
@@ -54,6 +54,7 @@ def make_github_blueprint(
         token_url="https://github.com/login/oauth/access_token",
         redirect_url=redirect_url,
         redirect_to=redirect_to,
+        callback_uri_scheme=callback_uri_scheme,
         login_url=login_url,
         authorized_url=authorized_url,
         session_class=session_class,
